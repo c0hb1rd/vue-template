@@ -3,21 +3,19 @@
 ## 项目结构
 ```bash
 ├── README.md
-├── dist
+├── dist                    # 编译完文件夹
 ├── favicon.ico
 ├── index.html
 ├── package-lock.json
 ├── package.json
-├── src                                    # 项目源码
-│   ├── App.vue                    # 入口组件
+├── src                     # 项目源码
+│   ├── App.vue             # 入口组件
 │   ├── api                 # 通信基类以及后端交互接口
 │   ├── assets              # 资源文件
 │   ├── components          # 自定义组件
-│   ├── store                    # Vuex 统一状态存储
-│   ├── utils                           # 样式、时间处理等公用函数
+│   ├── utils               # 样式、时间处理等公用函数
 │   ├── main.js             # 入口文件
-│   ├── router           # Vue 路由
-│   ├── socket.io.min.js 
+│   ├── router              # Vue 路由
 │   └── views               # 前端视图
 └── webpack.config.js
 ```
