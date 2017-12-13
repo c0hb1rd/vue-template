@@ -1,0 +1,163 @@
+import Vue from 'vue';
+import Router from 'vue-router';
+const _import = require('./_import_' + process.env.NODE_ENV);
+
+// development 环境: 不用懒加载，以免大页面下 webpack 热更新太慢
+// production 环境: 用懒加载
+
+Vue.use(Router);
+
+import Layout from '../views/Layout.vue';
+import Welcome from '../views/Welcome.vue';
+
+
+export const staticRoutes = [
+    {
+        path: '/login',
+        component: _import('Login'),
+        name: '',
+        hidden: true
+    },
+    {
+        path: '/404',
+        component: _import('404'),
+        name: '',
+        hidden: true
+    },
+    {
+        path: '/joke',
+        component: _import('Joke'),
+        name: '',
+        hidden: true
+    },
+    {
+        path: '/',
+        hidden: true,
+        name:'',
+        redirect: '/welcome',
+        component: Layout,
+        children: [
+            { path: '/welcome', component: Welcome }
+        ]
+    },
+    //others
+    {
+        path: '*',
+        hidden: true,
+        redirect: { path: '/404' }
+    }
+];
+
+export default new Router({
+    mode: 'history', //后端支持可开
+    scrollBehavior: (to, from, savedPosition) => { //只在 HTML5 history 模式下可用
+        if (savedPosition) {
+            return savedPosition
+        } else {
+            return { x: 0, y: 0 }
+        }
+    },
+    routes: staticRoutes
+});
+
+export const dynamicRoutes = [
+    //监控中心
+    {
+        path: '/monitor',
+        iconCls: 'fa fa-fw fa-dashboard',
+        component: Layout,
+        name: '监控中心',
+        children: [
+            { path: '/monitor/test', iconCls: 'fa fa-fw fa-superpowers', component: _import('monitor/Test'), name: 'Test' },
+            { path: '/monitor/charts', iconCls: 'fa fa-fw fa-pie-chart', component: _import('monitor/Echarts1'), name: '总体态势' },
+            { path: '/monitor/onlineusers', iconCls: 'fa fa-fw fa-street-view', component: _import('monitor/OnlineUsers'), name: '当前在线用户' }
+        ]
+    },
+    
+    //策略管理
+    {
+        path: '/policyMG',
+        iconCls: 'fa fa-fw fa-th-list',
+        component: Layout,
+        name: '策略管理',
+        children: [
+            { path: '/policyMG/quickbind', iconCls: 'fa fa-fw fa-send', component: _import('policyMG/PolicyBind'), name: '策略快速下发' },
+            { path: '/policyMG/templates', iconCls: 'fa fa-fw fa-puzzle-piece', component: _import('policyMG/PolicyTemplate'), name: '策略模板' }
+        ]
+    },
+
+    //审计管理
+    {
+        path: '/auditMG',
+        iconCls: 'fa fa-fw fa-bar-chart',
+        component: Layout,
+        name: '审计管理',
+        children: [
+            { path: '/auditMG/userlog', iconCls: 'fa fa-fw fa-user-circle', component: _import('auditMG/UserLog'), name: '用户审计' },
+        ]
+    },
+    //升级管理
+    {
+        path: '/updateMG',
+        iconCls: 'fa fa-fw fa-arrow-circle-up',
+        component: Layout,
+        name: '升级管理',
+        children: [
+            { path: '/updateMG/patch', iconCls: 'fa fa-fw fa-life-ring', component: _import('updateMG/PatchManager'), name: '补丁管理' },
+            { path: '/updateMG/soft', iconCls: 'fa fa-fw fa-cube', component: _import('updateMG/SoftManager'), name: '软件管理' },
+            { path: '/updateMG/update', iconCls: 'fa fa-fw fa-arrow-circle-up', component: _import('updateMG/UpdateManager'), name: '终端升级' }
+        ]
+    },
+    //资产管理
+    {
+        path: '/assetMG',
+        iconCls: 'fa fa-fw fa-cubes',
+        component: Layout,
+        name: '资产管理',
+        children: [
+            {
+                path: '/assetMG/asset',
+                iconCls: 'fa fa-fw fa-cubes',
+                submenu: true,
+                component: _import('assetMG/index'),
+                name: '资产操作',
+                children: [
+                    { path: '/assetMG/asset/register', component: _import('assetMG/Table'), name: '资产登记' },
+                    { path: '/assetMG/asset/check', component: _import('assetMG/Form'), name: '资产查看' },
+                    { path: '/assetMG/asset/destroy', component: _import('assetMG/Page4'), name: '资产销毁' },
+                    { path: '/assetMG/asset/unregister', component: _import('assetMG/User'), name: '未登记资产' }
+                ]
+            },
+            { path: '/assetMG/host', iconCls: 'fa fa-fw fa-desktop', component: _import('assetMG/HostMg'), name: '主机管理' },
+            { path: '/assetMG/hostgroup', iconCls: 'fa fa-fw fa-object-group', component: _import('assetMG/HostGroupMg'), name: '主机组管理' },
+        ]
+        
+    },
+    //组织管理
+    {
+        path: '/orgMG',
+        iconCls: 'fa fa-fw fa-bank',
+        component: Layout,
+        name: '组织管理',
+        children: [
+            { path: '/orgMG/org', iconCls: 'fa fa-fw fa-building', component: _import('orgMG/OrgManager'), name: '机构管理' },
+            { path: '/orgMG/user', iconCls: 'fa fa-fw fa-group', component: _import('orgMG/UserManager'), name: '用户管理' }
+        ]
+    },
+
+    //系统管理
+    {
+        path: '/sysMG',
+        iconCls: 'fa fa-fw fa-gears',
+        component: Layout,
+        name: '系统管理',
+        children: [
+            { path: '/sysMG/sysresource', iconCls: 'fa fa-fw fa-briefcase', component: _import('sysMG/SysResource'), name: '系统资源' },
+            { path: '/sysMG/sysrole', iconCls: 'fa fa-fw fa-universal-access', component: _import('sysMG/SysRole'), name: '系统角色' },
+            { path: '/sysMG/sysuser', iconCls: 'fa fa-fw fa-user-md', component: _import('sysMG/SysUser'), name: '系统用户' },
+            { path: '/sysMG/syslog', iconCls: 'fa fa-fw fa-file-text', component: _import('sysMG/SysLog'), name: '系统日志' },
+            { path: '/sysMG/sysconf', iconCls: 'fa fa-fw fa-gear', component: _import('sysMG/SysConf'), name: '系统配置' },
+        ]
+    },
+];
+
